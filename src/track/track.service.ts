@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { validate } from 'uuid';
+import { TrackDto } from './dto/track.dto';
 import { CreateTrackDto } from './dto/create-track.dto';
-import { UpdateTrackDto } from './dto/update-track.dto';
+import { TrackDbService } from 'src/datasource/track-db.service';
 
 @Injectable()
 export class TrackService {
-  create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+  constructor(private readonly trackDb: TrackDbService) {}
+
+  getAll(): TrackDto[] {
+    return this.trackDb.getAll();
   }
 
-  findAll() {
-    return `This action returns all track`;
+  getOne(id: string): TrackDto {
+    const track = this.validateAndGetTrack(id);
+    return track;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  add(tr: CreateTrackDto): TrackDto {
+    return this.trackDb.addTrack(tr);
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  update(id: string, tr: CreateTrackDto): TrackDto {
+    const track = this.validateAndGetTrack(id);
+    return this.trackDb.update(id, tr);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  delete(id: string): void {
+    const track = this.validateAndGetTrack(id);
+    return this.trackDb.delete(id);
+  }
+
+  private validateAndGetTrack(id: string): TrackDto {
+    if (!validate(id)) {
+      throw new BadRequestException('ID is invalid');
+    }
+    const track = this.trackDb.getTrack(id);
+    if (!track) {
+      throw new NotFoundException('Track was not found');
+    }
+    return track;
   }
 }

@@ -43,6 +43,5 @@ export class ArtisDBService {
   delete(id: string) {
     const index = this.DB.findIndex((art) => art.id === id);
     this.DB.splice(index, 1);
-
   }
 }
