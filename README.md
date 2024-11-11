@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js - 22.9.0
+- Node.js - 22.9.0 required
 
 ## Downloading
 
