@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { validate } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtisDBService } from 'src/datasource/artist-db.service';
+import { ArtistDto } from './dto/artist.dto';
 
 @Injectable()
 export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+  constructor(private readonly artistDb: ArtisDBService) {}
+
+  getAll(): ArtistDto[] {
+    return this.artistDb.getAll();
   }
 
-  findAll() {
-    return `This action returns all artist`;
+  getArtist(id: string): ArtistDto {
+    const artist = this.validateAndGetArtist(id);
+    return artist;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  addArtist(art: CreateArtistDto): ArtistDto {
+    return this.artistDb.addArtist(art);
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  updateArtist(id: string, art: CreateArtistDto): ArtistDto {
+    const artist = this.validateAndGetArtist(id);
+    return this.artistDb.update(id, art);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  delete(id: string): void {
+    const artist = this.validateAndGetArtist(id);
+    return this.artistDb.delete(id);
+  }
+
+  private validateAndGetArtist(id: string): ArtistDto {
+    if (!validate(id)) {
+      throw new BadRequestException('ID is invalid');
+    }
+    const artist = this.artistDb.getArtist(id);
+    if (!artist) {
+      throw new NotFoundException('Artist was not found');
+    }
+    return artist;
   }
 }

@@ -55,11 +55,11 @@ export class UserDBService {
 
   private excludePassword(user: IUser): IUserSafety {
     if (!user) {
-      return;
+      return null;
     }
-    const safeUser = { ...user };
-    delete safeUser.password;
-    return safeUser as IUserSafety;
+    const shallowUserCopy = { ...user };
+    delete shallowUserCopy.password;
+    return shallowUserCopy as IUserSafety;
   }
 
   private createUser(user: CreateUserDto): IUser {

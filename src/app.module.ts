@@ -7,6 +7,7 @@ import { TrackModule } from './track/track.module';
 import { ArtistModule } from './artist/artist.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { GlobalModule } from './datasource-global';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true, 
     }),
+    GlobalModule,
   ],
   controllers: [AppController],
   providers: [AppService],
