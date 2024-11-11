@@ -3,10 +3,13 @@ import { randomUUID } from 'crypto';
 import { CreateAlbumDto } from 'src/album/dto/create-album.dto';
 import { TrackDbService } from './track-db.service';
 import { IAlbum } from 'src/interface/album.interface';
+import { FavoritesDbService } from './favorites-db.service';
 
 @Injectable()
 export class AlbumDBService {
   constructor(
+    @Inject(forwardRef(() => FavoritesDbService))
+    private readonly favsDb: FavoritesDbService,
     @Inject(forwardRef(() => TrackDbService))
     private readonly trackDb: TrackDbService,
   ) {
@@ -49,6 +52,8 @@ export class AlbumDBService {
   delete(id: string) {
     const i = this.DB.findIndex((al) => al.id === id);
     this.DB.splice(i, 1);
+    this.trackDb.clearAlbumField(id);
+    this.favsDb.deleteAlbum(id);
     this.trackDb.clearAlbumField(id);
   }
 

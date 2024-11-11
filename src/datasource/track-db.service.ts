@@ -2,10 +2,14 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { ITrack } from 'src/interface/track.interface';
 import { CreateTrackDto } from 'src/track/dto/create-track.dto';
+import { FavoritesDbService } from './favorites-db.service';
 
 @Injectable()
 export class TrackDbService {
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => FavoritesDbService))
+    private readonly favsDb: FavoritesDbService,
+  ) {
     this.DB = [];
   }
   private DB: ITrack[];
@@ -44,7 +48,8 @@ export class TrackDbService {
 
   delete(id: string) {
     const i = this.DB.findIndex((track) => track.id === id);
-    this.DB.splice(i, 1);    
+    this.DB.splice(i, 1);  
+    this.favsDb.deleteTrack(id);  
   }
 
   clearAlbumField(albumId: string) {

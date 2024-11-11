@@ -2,11 +2,21 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { CreateArtistDto } from 'src/artist/dto/create-artist.dto';
 import { IArtist } from 'src/interface/artist.interface';
+import { AlbumDBService } from './album-db.service';
+import { FavoritesDbService } from './favorites-db.service';
+import { TrackDbService } from './track-db.service';
 
 
 @Injectable()
 export class ArtisDBService {
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => TrackDbService))
+    private readonly trackDb: TrackDbService,
+    @Inject(forwardRef(() => FavoritesDbService))
+    private readonly favsDb: FavoritesDbService,
+    @Inject(forwardRef(() => AlbumDBService))
+    private readonly albumDb: AlbumDBService,
+  ) {
     this.DB = [];
   }
   private DB: IArtist[];
@@ -43,5 +53,8 @@ export class ArtisDBService {
   delete(id: string) {
     const index = this.DB.findIndex((art) => art.id === id);
     this.DB.splice(index, 1);
+    this.trackDb.clearArtistField(id);
+    this.favsDb.deleteArtist(id);
+    this.albumDb.clearArtistField(id);
   }
 }
