@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+    ports:
+      - 5432:5432
+    networks:
+      - library-service-network
+    volumes:
+      - ./datasource/db_data:/var/lib/postgresql/data
+  app:
+    image: mariaakulova2024/nodejs2024q3-library-service:v1
+    restart: always
+    volumes:
+      - ./src:/app/src
+      - ./datasource:/app/datasource
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - library-service-network
+
+networks:
+  library-service-network:
