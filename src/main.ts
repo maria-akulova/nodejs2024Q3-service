@@ -16,7 +16,7 @@ async function bootstrap() {
     .addTag('restapi')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('doc', app, documentFactory);
   const port = app.get(ConfigService).get('PORT');
 
   await app.listen(port, () => console.log(`Server is running on port: ${port}`));
