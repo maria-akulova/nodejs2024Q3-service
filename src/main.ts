@@ -5,12 +5,14 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { LoggingService } from './logging/logging.service';
 import { Request, Response, NextFunction } from 'express';
+import { AllExceptionsFilter } from './filters/exeptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const loggingService = app.get(LoggingService);
   app.useLogger(loggingService);
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new AllExceptionsFilter(loggingService));
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
