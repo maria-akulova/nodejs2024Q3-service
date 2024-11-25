@@ -8,6 +8,7 @@ import { ArtistModule } from './artist/artist.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { GlobalModule } from './datasource-global';
+import { LoggingModule } from './logging/logging.module';
 
 @Module({
   imports: [
@@ -17,9 +18,10 @@ import { GlobalModule } from './datasource-global';
     AlbumModule,
     FavoritesModule,
     ConfigModule.forRoot({
-      isGlobal: true, 
+      isGlobal: true,
     }),
     GlobalModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

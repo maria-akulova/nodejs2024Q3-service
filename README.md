@@ -55,7 +55,27 @@ To run only one of all test suites
 
 ```
 npm run test -- <path to suite>
+
 ```
+
+## Logging & Error Handling and Authentication & Authorization
+
+To run the Application:
+```bash
+npm run docker:compose:dev
+```
+
+To run only specific test suite with authorization
+```bash
+npm run test:auth
+```
+
+### Logs
+
+You can change the  logging level and max file size. Open the `.env` file and set the desired variable.
+
+Application logs are stored in the `logs` directory. The system implements log rotation and retention, ensuring that older logs are preserved in separate files with timestamped suffixes. This helps maintain organized and manageable log files over time.
+
 ## Misc
 ### Docker container vulnerability scan
 Install Snyk: `npm install -g snyk`

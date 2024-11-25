@@ -12,11 +12,12 @@ services:
     volumes:
       - ./datasource/db_data:/var/lib/postgresql/data
   app:
-    image: mariaakulova2024/nodejs2024q3-library-service:v1
+    image: mariaakulova2024/nodejs2024q3-library-service:log
     restart: always
     volumes:
       - ./src:/app/src
       - ./datasource:/app/datasource
+      - ./logs:/app/logs
     env_file:
       - .env
     depends_on:
