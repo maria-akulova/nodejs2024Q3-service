@@ -62,7 +62,7 @@ npm run test -- <path to suite>
 
 To run the Application:
 ```bash
-npm run docker:compose:dev
+npm run docker:compose
 ```
 
 To run only specific test suite with authorization

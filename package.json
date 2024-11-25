@@ -24,8 +24,7 @@
     "docker:scan": "snyk container test mariaakulova2024/nodejs2024q3-library-service:v1",
     "docker:build": "docker buildx build --output type=image,name=mariaakulova2024/nodejs2024q3-library-service:log,compression=zstd .",
     "docker:push": "docker buildx build --output type=image,name=mariaakulova2024/nodejs2024q3-library-service:log,compression=zstd,push=true .",
-    "docker:compose:prod": "docker compose -f docker-compose.yml up",
-    "docker:compose:dev": "docker compose -f docker-compose.yml -f dev.docker-compose.yml up",
+    "docker:compose": "docker compose -f docker-compose.yml up",
     "migrate": "npx prisma migrate dev --preview-feature"
   },
   "dependencies": {

@@ -1,19 +1,25 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:17-alpine
+    container_name: postgres-library
     restart: always
-    environment:
+    env_file: .env
     ports:
-      - 5432:5432
+       - '${DB_PORT}:${DB_PORT}'
     networks:
       - library-service-network
     volumes:
       - ./datasource/db_data:/var/lib/postgresql/data
+      - postgres_logs:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
   app:
     image: mariaakulova2024/nodejs2024q3-library-service:log
     restart: always
+    container_name: library
     volumes:
       - ./src:/app/src
       - ./datasource:/app/datasource
@@ -29,3 +35,8 @@ services:
 
 networks:
   library-service-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  postgres_logs:
