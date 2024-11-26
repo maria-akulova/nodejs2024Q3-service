@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggingService } from './logging/logging.service';
 import { Request, Response, NextFunction } from 'express';
 import { AllExceptionsFilter } from './filters/exeptions.filter';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,19 @@ async function bootstrap() {
   app.useLogger(loggingService);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter(loggingService));
+
+  app.useGlobalGuards(
+    new (class extends JwtAuthGuard {
+      canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const { url } = request;
+        if (url === '/' || url.startsWith('/auth/') || url.startsWith('/doc')) {
+          return true;
+        }
+        return super.canActivate(context);
+      }
+    })(),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
