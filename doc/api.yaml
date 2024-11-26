@@ -272,7 +272,7 @@ paths:
       tags: &ref_2
         - track
     post:
-      operationId: TrackController_createArtist
+      operationId: TrackController_createTrack
       parameters: []
       requestBody:
         required: true
@@ -296,7 +296,7 @@ paths:
       tags: *ref_2
   /track/{id}:
     get:
-      operationId: TrackController_getArtistById
+      operationId: TrackController_getTrackById
       parameters:
         - name: id
           required: true

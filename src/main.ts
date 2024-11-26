@@ -34,7 +34,8 @@ async function bootstrap() {
       'The application should operate with the following resources: User, Artist, Track, Album, Favorites.',
     )
     .setVersion('1.0')
-    .addTag('restapi')
+    .addTag('User')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, documentFactory);

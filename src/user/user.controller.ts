@@ -15,14 +15,19 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 import { ErrorGlobal } from 'src/error-global';
+import { LoggingService } from 'src/logging/logging.service';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   @Get()
   getAllUsers(): UserDto[] {
+    this.loggingService.log('Getting all users', 'UsersController');
     return this.userService.getUsers();
   }
 
@@ -39,10 +44,11 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   getUserById(@Param('id') id: string): UserDto {
+    this.loggingService.log(`Getting user by id: ${id}`, 'UsersController');
     return this.userService.getUser(id);
   }
 
@@ -69,9 +75,9 @@ export class UserController {
       },
     },
   })
-
   @HttpCode(HttpStatus.CREATED)
   createUser(@Body() user: CreateUserDto): UserDto {
+    this.loggingService.log(`Creating user: ${user.login}`, 'UsersController');
     return this.userService.addUser(user);
   }
 
@@ -88,7 +94,7 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   @ApiResponse({
@@ -100,6 +106,10 @@ export class UserController {
     @Param('id') id: string,
     @Body() passes: UpdatePasswordDto,
   ): UserDto {
+    this.loggingService.debug(
+      `Updating password for user: ${id}`,
+      'UsersController',
+    );
     return this.userService.updatePass(id, passes);
   }
 
@@ -115,11 +125,12 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteUser(@Param('id') id: string): void {
+    this.loggingService.warn(`Deleting user: ${id}`, 'UsersController');
     return this.userService.delete(id);
   }
 }

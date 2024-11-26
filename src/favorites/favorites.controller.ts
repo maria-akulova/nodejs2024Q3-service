@@ -11,14 +11,19 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponseDto } from './dto/favorites-respose.dto';
 import { ErrorGlobal } from 'src/error-global';
+import { LoggingService } from 'src/logging/logging.service';
 
 @ApiTags('favorites')
 @Controller('favs')
 export class FavoritesController {
-  constructor(private readonly favServise: FavoritesService) {}
+  constructor(
+    private readonly favServise: FavoritesService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   @Get()
   getAll(): FavoritesResponseDto {
+    this.loggingService.log('Getting all favorites', 'Favorites');
     return this.favServise.getAll();
   }
 
@@ -40,6 +45,8 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.CREATED)
   addTrack(@Param('id') id: string) {
+    this.loggingService.log(`Adding track to favorites: ${id}`, 'Favorites');
+
     return this.favServise.addTrack(id);
   }
 
@@ -60,6 +67,10 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteTrack(@Param('id') id: string) {
+    this.loggingService.log(
+      `Removing track from favorites: ${id}`,
+      'Favorites',
+    );
     return this.favServise.deleteTrack(id);
   }
 
@@ -81,6 +92,7 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.CREATED)
   addAlbum(@Param('id') id: string) {
+    this.loggingService.log(`Adding album to favorites: ${id}`, 'Favorites');
     return this.favServise.addAlbum(id);
   }
 
@@ -101,6 +113,10 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteAlbum(@Param('id') id: string) {
+    this.loggingService.log(
+      `Removing album from favorites: ${id}`,
+      'Favorites',
+    );
     return this.favServise.deleteAlbum(id);
   }
 
@@ -122,6 +138,7 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.CREATED)
   addArtist(@Param('id') id: string) {
+    this.loggingService.log(`Adding artist to favorites: ${id}`, 'Favorites');
     return this.favServise.addArtist(id);
   }
 
@@ -142,6 +159,10 @@ export class FavoritesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteArtist(@Param('id') id: string) {
+    this.loggingService.log(
+      `Removing artist from favorites: ${id}`,
+      'Favorites',
+    );
     return this.favServise.deleteArtist(id);
   }
 }

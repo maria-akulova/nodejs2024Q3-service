@@ -14,14 +14,19 @@ import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { ArtistDto } from './dto/artist.dto';
 import { ErrorGlobal } from 'src/error-global';
+import { LoggingService } from 'src/logging/logging.service';
 
 @ApiTags('artist')
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   @Get()
   getAll(): ArtistDto[] {
+    this.loggingService.log('Getting all artists', 'Artists');
     return this.artistService.getAll();
   }
 
@@ -38,10 +43,11 @@ export class ArtistController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   getArtistById(@Param('id') id: string): ArtistDto {
+    this.loggingService.log(`Getting artist by id: ${id}`, 'Artists');
     return this.artistService.getArtist(id);
   }
 
@@ -70,6 +76,7 @@ export class ArtistController {
   })
   @HttpCode(HttpStatus.CREATED)
   createArtist(@Body() art: CreateArtistDto): ArtistDto {
+    this.loggingService.log(`Creating artist: ${art.name}`, 'Artists');
     return this.artistService.addArtist(art);
   }
 
@@ -86,10 +93,11 @@ export class ArtistController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   update(@Param('id') id: string, @Body() art: CreateArtistDto): ArtistDto {
+    this.loggingService.log(`Updating artist: ${id}`, 'Artists');
     return this.artistService.updateArtist(id, art);
   }
 
@@ -105,11 +113,12 @@ export class ArtistController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string): void {
+    this.loggingService.log(`Removing artist: ${id}`, 'Artists');
     return this.artistService.delete(id);
   }
 }

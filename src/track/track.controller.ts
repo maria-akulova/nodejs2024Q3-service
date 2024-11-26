@@ -14,13 +14,18 @@ import { TrackService } from './track.service';
 import { TrackDto } from './dto/track.dto';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { ErrorGlobal } from 'src/error-global';
+import { LoggingService } from 'src/logging/logging.service';
 @ApiTags('track')
 @Controller('track')
 export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+  constructor(
+    private readonly trackService: TrackService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   @Get()
   getAll(): TrackDto[] {
+    this.loggingService.log('Getting all tracks', 'Tracks');
     return this.trackService.getAll();
   }
 
@@ -37,10 +42,11 @@ export class TrackController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: TrackDto,
   })
-  getArtistById(@Param('id') id: string): TrackDto {
+  getTrackById(@Param('id') id: string): TrackDto {
+    this.loggingService.log(`Getting track by id: ${id}`, 'Tracks');
     return this.trackService.getOne(id);
   }
 
@@ -68,7 +74,8 @@ export class TrackController {
     },
   })
   @HttpCode(HttpStatus.CREATED)
-  createArtist(@Body() tr: CreateTrackDto): TrackDto {
+  createTrack(@Body() tr: CreateTrackDto): TrackDto {
+    this.loggingService.log(`Creating track: ${tr.name}`, 'Tracks');
     return this.trackService.add(tr);
   }
 
@@ -85,10 +92,11 @@ export class TrackController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   update(@Param('id') id: string, @Body() tr: CreateTrackDto): TrackDto {
+    this.loggingService.log(`Updating track by id: ${id}`, 'Tracks');
     return this.trackService.update(id, tr);
   }
 
@@ -104,11 +112,12 @@ export class TrackController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string): void {
+    this.loggingService.log(`Deleting track by id: ${id}`, 'Tracks');
     return this.trackService.delete(id);
   }
 }

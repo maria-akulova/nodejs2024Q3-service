@@ -10,6 +10,8 @@ import { ConfigModule } from '@nestjs/config';
 import { GlobalModule } from './datasource-global';
 import { LoggingModule } from './logging/logging.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -26,6 +28,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}

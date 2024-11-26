@@ -14,14 +14,19 @@ import { AlbumService } from './album.service';
 import { AlbumDto } from './dto/album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { ErrorGlobal } from 'src/error-global';
+import { LoggingService } from 'src/logging/logging.service';
 
 @ApiTags('album')
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(
+    private readonly albumService: AlbumService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   @Get()
   getAll(): AlbumDto[] {
+    this.loggingService.log('Getting all albums', 'Albums');
     return this.albumService.getAll();
   }
 
@@ -38,10 +43,11 @@ export class AlbumController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   getAlbumById(@Param('id') id: string): AlbumDto {
+    this.loggingService.log(`Getting album by id: ${id}`, 'Albums');
     return this.albumService.getAlbum(id);
   }
 
@@ -70,6 +76,7 @@ export class AlbumController {
   })
   @HttpCode(HttpStatus.CREATED)
   createArtist(@Body() al: CreateAlbumDto): AlbumDto {
+    this.loggingService.log(`Creating album: ${al.name}`, 'Albums');
     return this.albumService.addAlbum(al);
   }
 
@@ -86,10 +93,11 @@ export class AlbumController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   update(@Param('id') id: string, @Body() al: CreateAlbumDto): AlbumDto {
+    this.loggingService.log(`Updating album: ${id}`, 'Albums');
     return this.albumService.updateAlbum(id, al);
   }
 
@@ -105,11 +113,12 @@ export class AlbumController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "No record with requested id",
+    description: 'No record with requested id',
     type: ErrorGlobal,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string): void {
+    this.loggingService.log(`Removing album: ${id}`, 'Albums');
     return this.albumService.delete(id);
   }
 }
