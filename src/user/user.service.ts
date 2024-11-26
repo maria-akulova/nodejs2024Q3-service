@@ -15,15 +15,19 @@ export class UserService {
   constructor(private readonly userDb: UserDBService) {}
 
   private readonly invalidIDMessage = 'ID is invalid';
-  private readonly nonexistedUserMessage = 'User doesn\'t exist';
+  private readonly nonexistedUserMessage = "User doesn't exist";
 
-  getUsers(){
+  getUsers() {
     return this.userDb.getUsers();
   }
 
   getUser(id: string) {
     const user = this.validateAndGetUser(id);
     return this.userDb.getUser(id, false);
+  }
+
+  getUserByLogin(login: string) {
+    return this.userDb.getUserByLogin(login, false);
   }
 
   addUser(user: CreateUserDto) {

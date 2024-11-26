@@ -14,11 +14,15 @@ export class UserDBService {
   }
   private DB: IUser[];
 
-  searchUserById(id: string): IUser{
-    return   this.DB.find((user) => user.id === id);
+  searchUserById(id: string): IUser {
+    return this.DB.find((user) => user.id === id);
   }
 
-  indexByUserId(id: string): number{
+  searchUserByLogin(login: string): IUser {
+    return this.DB.find((user) => user.login === login);
+  }
+
+  indexByUserId(id: string): number {
     return this.DB.findIndex((user) => user.id === id);
   }
 
@@ -28,7 +32,12 @@ export class UserDBService {
 
   getUser(id: string, isPassword = false): IUserSafety | IUser {
     const user = this.searchUserById(id);
-    return isPassword ? user: this.excludePassword(user);
+    return isPassword ? user : this.excludePassword(user);
+  }
+
+  getUserByLogin(login: string, isPassword = false): IUserSafety | IUser {
+    const user = this.searchUserByLogin(login);
+    return isPassword ? user : this.excludePassword(user);
   }
 
   addUser(user: CreateUserDto): IUserSafety {
@@ -75,4 +84,3 @@ export class UserDBService {
     return newUser;
   }
 }
-

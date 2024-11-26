@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { GlobalModule } from './datasource-global';
 import { LoggingModule } from './logging/logging.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LoggingModule } from './logging/logging.module';
     }),
     GlobalModule,
     LoggingModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
